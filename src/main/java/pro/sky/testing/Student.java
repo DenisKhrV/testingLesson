@@ -6,9 +6,8 @@ public class Student {
     private int age;
     private boolean isMale;
 
-    public Student(String name, int age, boolean isMale) {
+    public Student(String name, boolean isMale) {
         this.name = name;
-        this.age = age;
         this.isMale = isMale;
     }
 

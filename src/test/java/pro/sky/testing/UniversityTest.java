@@ -2,6 +2,10 @@ package pro.sky.testing;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,20 +13,23 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ExtendWith(MockitoExtension.class)
 public class UniversityTest {
-
+    private  Student student = new Student("Евгений", true);
     private Student student1;
     private Student student2;
     private Student student3;
+    @Mock
+    private StudentValueGenerator studentValueGenerator = new StudentValueGenerator();
     private University university;
 
     @BeforeEach
     public void setUp() {
-        student1 = new Student("Евгений", 35, true);
-        student2 = new Student("Марина", 34, false);
-        student3 = new Student("Алина", 7, false);
+        student1 = new Student("Евгений", true);
+        student2 = new Student("Марина", false);
+        student3 = new Student("Алина", false);
 
-        university = new University();
+        university = new University(studentValueGenerator);
 
         university.addStudent(student1);
         university.addStudent(student2);
@@ -31,16 +38,13 @@ public class UniversityTest {
 
     @Test
     public void getAllStudents() {
+        assertNotNull(studentValueGenerator);
 
+        Mockito.when(studentValueGenerator.generateAge()).thenReturn(50);
+
+        university.addStudent(student);
         List<Student> expected = university.getAllStudents();
-
-        List<Student> actual = new ArrayList<Student>();
-
-        actual.add(student1);
-        actual.add(student2);
-        actual.add(student3);
-
-        assertEquals(expected, actual);
+        assertEquals(expected.get(3).getAge(), 50);
     }
 
     @Test
